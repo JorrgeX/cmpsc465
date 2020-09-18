@@ -8,11 +8,11 @@ def sort_points(lst):
             x_min = i
     
     lst.remove(x_min)
-    sort_lst.append(x_min)  # add left most to the list
+    sort_lst.append(x_min)  # add left most as the first item
 
     slope_list = []
     for i in lst:   # calculate the slope from every point to x_min
-        slope = (i[1]-x_min[1])/(i[0]-x_min[0]) # delta y / delta x
+        slope = (i[1]-x_min[1]) / (i[0]-x_min[0]) # delta y / delta x
         slope_list.append([i, slope])   # use list to store the information [point, slope]
 
     slope_list = sorted(slope_list, key=lambda x: x[1]) # sorted the points with slope
@@ -32,12 +32,12 @@ def Graham_Scan_core(lst):
     for i in range(3, len(lst)):
         while stack != []:
             a, b = stack[-2], stack[-1] # the 2nd latest and latest points
-            dot_product = (b[0]-a[0])*(b[0]-lst[i][0])+(b[1]-a[1])*(b[1]-lst[i][1]) # check the angle from a -> b -> i
-            if dot_product > 0: # if this angle is acute
+            dot_product = (b[0]-a[0])*(b[0]-lst[i][0]) + (b[1]-a[1])*(b[1]-lst[i][1]) # check the angle from a -> b -> i
+            if dot_product >= 0: # if this angle is acute
                 stack.pop() # delete the latest point
             else:
                 break
-        stack.append(lst[i]) # push the new point on the stack
+        stack.append(lst[i]) # push the new point onto the stack
     
     return stack
 
