@@ -31,11 +31,8 @@ def Graham_Scan_core(lst):
     
     for i in range(3, len(lst)):
         while stack != []:
-            if len(stack) >= 2:
-                a, b = stack[-2], stack[-1] # the 2nd latest and latest points
-            else: 
-                break
-
+            a, b = stack[-2], stack[-1] # the 2nd latest and latest points
+            
             dot_product = (b[0]-a[0])*(lst[i][1]-b[1]) - (b[1]-a[1])*(lst[i][0]-b[0])
             if dot_product < 0: # if turning right
                 stack.pop() # delete the latest point
