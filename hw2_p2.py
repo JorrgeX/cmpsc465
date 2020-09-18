@@ -36,8 +36,8 @@ def Graham_Scan_core(lst):
             else: 
                 break
 
-            dot_product = (b[0]-a[0]*[lst[i][0]-b[0]]) + (b[1]-a[1]*[lst[i][1]-b[1]])
-            if dot_product > 0: # if this angle is acute
+            dot_product = (b[0]-a[0])*(lst[i][1]-b[1]) - (b[1]-a[1])*(lst[i][0]-b[0])
+            if dot_product < 0: # if turning right
                 stack.pop() # delete the latest point
             else:
                 break
