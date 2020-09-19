@@ -59,7 +59,6 @@ def envelope_num(lst):
         
     print(upper, lower)
 
-    return 
 
 
 def main():
@@ -68,13 +67,13 @@ def main():
     for i in range(num_of_lines):
         nums = input().split()
         nums = [float(j) for j in nums]
+        nums[-1] *= -1
         points.append(nums)
 
     sort_arr = sort_points(points)
     ch_arr = Graham_Scan_core(sort_arr)
     envelope_num(ch_arr)
 
-    return 
 
 
 main()
