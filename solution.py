@@ -1,3 +1,7 @@
+# Yuan-Chih Hsieh     ID: yvh5398
+# Jarod Beaumariage   ID: jfb5691
+# Kelvin Ngure        ID: knn5090
+
 # convert input lines into list of integers
 def convert_input(l):
     line = l.split()
@@ -5,116 +9,69 @@ def convert_input(l):
     return line
 
 
+class graph:
+    def __init__(self, v, e, s):
+        self.v = v
+        self.e = e
+        self.s = s
+        # dist[s]=0, dist[v]=infinity, if v!=s
+        self.dist = {}
 
-# priority queue
-class PQ:
-    def __init__(self):
-        self.bh = []    # first store value, second store number
+    def update(self, i, j):
+        if self.dist[i] + j[1] < self.dist[j[0]]:
+            self.dist[j[0]] = self.dist[i] + j[1]
 
-    def bubble_up(self, k):
-        if k == 0:
-            pass
-        else:
-            p = (k-1) // 2
-            if self.bh[p][0] > self.bh[k][0]:
-                temp = self.bh[p]
-                self.bh[p] = self.bh[k]
-                self.bh[k] = temp
-                self.bubble_up(p)
 
-    def siftdown(self, k):
-        if 2*k+1 >= len(self.bh):
-            return
-        elif 2*k+2 >= len(self.bh):
-            c = 2*k+1
-        else:
-            if self.bh[2*k+1][0] <= self.bh[2*k+2][0]:
-                c = 2*k+1
+    def Bellman_Ford(self):
+
+        for i in self.v:
+            if i == self.s:
+                self.dist[i] = 0
             else:
-                c = 2*k+2
-        if self.bh[k][0] > self.bh[c][0]:
-            temp = self.bh[k]
-            self.bh[k] = self.bh[c]
-            self.bh[c] = temp
-            self.siftdown(c)
-        
-    def insert(self, val, num):
-        self.bh.append([val, num])
-        self.bubble_up(len(self.bh)-1)
+                self.dist[i] = 1001
 
-    def empty(self):
-        if len(self.bh) == 0:
-            return True
-        else:
+        for k in range(1, len(self.v)):
+            for i in self.v:
+                if i in self.e:
+                    for j in self.e[i]:
+                        self.update(i, j)
+
+
+    def NC(self):
+        v_1 = {}
+        for i in self.dist:
+            v_1[i] = self.dist[i]
+        for i in self.v:
+            if i in self.e:
+                for j in self.e[i]:
+                    self.update(i, j)
+
+        if v_1 == self.dist:
             return False
-
-    def find_min(self):
-        return self.bh[0]
-
-    def del_min(self):
-        n = self.bh.pop()
-        if len(self.bh) != 0:
-            self.bh[0] = n
-            self.siftdown(0)
         else:
-            pass
-    
-    def decrease_key(self, k, val):
-        n = 0
-        while n < len(self.bh):
-            if self.bh[n][1] == k:
-                self.bh[n][0] = val
-                break
-            else:
-                n += 1
-        self.bubble_up(n)
-
-
-
-# find shortest path
-def Dijkstra(v, e, s):
-    dist = []
-    pq = PQ()
-    for i in range(1, v+1):
-        dist.append(1001)
-        pq.insert(1001, i)
-    dist[s-1] = 0
-    pq.decrease_key(s, 0)
-    while pq.empty() == False:
-        cur = pq.find_min()
-        pq.del_min()
-        if cur[1] not in e:
-            pass
-        else:
-            for v in e[cur[1]]:
-                if dist[v[0]-1] > dist[cur[1]-1] + v[1]:
-                    dist[v[0]-1] = dist[cur[1]-1] + v[1]
-                    pq.decrease_key(v[0], dist[v[0]-1])
-
-    return dist
-
+            return True
 
 
 # read inputs
 line1 = input()
 nms = convert_input(line1)
-v = nms[0]   # vertices
-e = nms[1]   # num of edges
+n = nms[0]   # vertices
+m = nms[1]   # num of edges
 s = nms[2]   # source vertex
-adj_e = {}   # first index is to which vertex, second is edge-length
-for i in range(e):
+
+v = []
+for i in range(n):
+    v.append(i+1)
+
+e = {}
+for i in range(m):
     read = input()
     edge = convert_input(read)
-    if edge[0] not in adj_e:
-        adj_e[edge[0]] = [[edge[1], edge[2]]]
+    if edge[0] not in e:
+        e[edge[0]] = [[edge[1], edge[2]]]
     else:
-        adj_e[edge[0]].append([edge[1], edge[2]])
+        e[edge[0]].append([edge[1], edge[2]])
 
-short_path = Dijkstra(v, adj_e, s)
-
-for i in range(len(short_path)):
-    if short_path[i] >= 1001:
-        short_path[i] = -1
-        print(short_path[i])
-    else:
-        print(short_path[i])
+test = graph(v, e, s)
+test.Bellman_Ford()
+print(test.NC())
